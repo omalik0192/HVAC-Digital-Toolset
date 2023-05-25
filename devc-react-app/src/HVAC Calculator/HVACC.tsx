@@ -1,45 +1,63 @@
+// Importing necessary modules and components from react and material-ui library
 import React, { useState } from 'react';
 import { Table, TableHead, TableRow, TableCell, TableBody, Select, MenuItem, IconButton, TextField } from '@material-ui/core';
 import AddIcon from '@material-ui/icons/Add';
 import DeleteIcon from '@material-ui/icons/Delete';
+import IRow from "./Interfaces/IRow"
+import DuctShape from "./enums/DuctShape"
 
+// Define the MyTable component
 const MyTable = () => {
-    const [rows, setRows] = useState([{ id: 1, ductShape: '', diameter: '', height: '', width: '' }]);
-
-  const handleAddRow = (index) => {
-    const newRow = { id: rows.length + 1, ductShape: '' };
-    const updatedRows = [...rows];
+  //Type information for row object
+ 
+    // Initialize a state variable 'rows' with an array containing a single object
+    // Also initialize the function 'setRows' to update this state
+    const [rows, setRows] = useState<IRow[]>([{ id: 1, ductShape: DuctShape.Unselected, diameter: "", height: "", width: "" }]);
+    // Function to add a new row to the table
+    const handleAddRow = (index: number) => {
+    // Create new row object
+    const newRow: IRow = { id: rows.length + 1, ductShape: DuctShape.Unselected  };
+    // Clone rows array
+    const updatedRows:IRow[] = [...rows];
     updatedRows.splice(index + 1, 0, newRow);
+    // Update state with the new array
     setRows(updatedRows);
   };
-
-  const handleDeleteRow = (index) => {
+  // Function to delete a row from the table
+  const handleDeleteRow = (index: number) => {
+    // Filter out the row at the given index
     const updatedRows = rows.filter((_, i) => i !== index);
+    // Update state with the new array
     setRows(updatedRows);
   };
-
-  const handleDuctShapeChange = (event, index) => {
+ //Function to handle changes in the input fields
+  const handleDuctShapeChange = (event: React.ChangeEvent<{value: unknown}>, index: number) => {
     const updatedRows = rows.map((row, i) => {
       if (i === index) {
-        return { ...row, ductShape: event.target.value };
+        return { ...row, ductShape: event.target.value as DuctShape };
       }
       return row;
     });
+    //Update state with new row
     setRows(updatedRows);
   };
-
-  const handleInputChange = (event, index) => {
+  //Function to handle changes in the input
+  const handleInputChange = (event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>, index: number) => {
+    //Update the property (name of the input field) of the row at the given index value with the new value
     const updatedRows = rows.map((row, i) => {
       if (i === index) {
         return { ...row, [event.target.name]: event.target.value };
       }
       return row;
     });
+    //Update the state with the new array
     setRows(updatedRows);
   };
-
+  //Render the component
   return (
+    //Define a table structure
     <Table>
+      {/*Define table headers*/}
       <TableHead>
         <TableRow>
           <TableCell >Duct Shape</TableCell>
@@ -52,7 +70,9 @@ const MyTable = () => {
           <TableCell>Pressure Loss (Pa)</TableCell>
         </TableRow>
       </TableHead>
+      {/*Define table body*/}
       <TableBody>
+        {/*map function to put data into table*/}
         {rows.map((row, index) => (
           <TableRow key={row.id}>
             <TableCell>
