@@ -9,7 +9,6 @@ import {
   Select,
   MenuItem,
   IconButton,
-  TextField,
   Dialog,
   DialogTitle,
   DialogContent,
@@ -53,6 +52,9 @@ const MyTable = () => {
     const newRow: IRow = {
       id: rows.length + 1,
       ductShape: DuctShape.Unselected,
+      diameter: "",  // Provide default value
+      height: "",    // Provide default value
+      width: "",     // Provide default value
     };
     // Clone rows array
     const updatedRows: IRow[] = [...rows];
@@ -67,33 +69,22 @@ const MyTable = () => {
     // Update state with the new array
     setRows(updatedRows);
   };
-  //Function to handle changes in the input fields
-  const handleDuctShapeChange = (
-    event: React.ChangeEvent<{ value: unknown }>,
-    index: number
-  ) => {
-    const updatedRows = rows.map((row, i) => {
-      if (i === index) {
-        return { ...row, ductShape: event.target.value as DuctShape };
-      }
-      return row;
-    });
-    //Update state with new row
-    setRows(updatedRows);
-  };
-  //Function to handle changes in the input
+  
+  //Function to handle changes in the input and track the row object
   const handleInputChange = (
-    event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
-    index: number
+    event: React.ChangeEvent<{ value: unknown }>,
+    index: number,
+    property: keyof IRow
   ) => {
     //Update the property (name of the input field) of the row at the given index value with the new value
     const updatedRows = rows.map((row, i) => {
       if (i === index) {
-        return { ...row, [event.target.name]: event.target.value };
+        return { ...row, [property]: event.target.value };
       }
       return row;
     });
     //Update the state with the new array
+    console.log(updatedRows)
     setRows(updatedRows);
   };
   const handleOpenModal = (index: number) => {
@@ -113,8 +104,8 @@ const MyTable = () => {
       <TableHead>
         <TableRow>
           <TableCell style={{ width: "100px", fontWeight: 'bold' }} align="left">Duct Shape</TableCell>
-          <TableCell style={{ width: "100px", fontWeight: 'bold' }} align="center">Height <br/>(mm)</TableCell>
-          <TableCell style={{ width: "100px", fontWeight: 'bold' }} align="center">Width  <br/>(mm)</TableCell>
+          <TableCell style={{ width: "100px", fontWeight: 'bold' }} align="center">Width <br/>(mm)</TableCell>
+          <TableCell style={{ width: "100px", fontWeight: 'bold' }} align="center">Height  <br/>(mm)</TableCell>
           <TableCell style={{ width: "100px", fontWeight: 'bold' }} align="center">Diameter  <br/>(mm)</TableCell>
           <TableCell style={{ width: "120px", fontWeight: 'bold' }} align="center">Length  <br/>(mm)</TableCell>
           <TableCell style={{ width: "150px", fontWeight: 'bold' }} align="center">
@@ -142,10 +133,10 @@ const MyTable = () => {
         {/*map function to put data into table*/}
         {rows.map((row, index) => (
           <TableRow key={row.id}>
-            <TableCell>
+            <TableCell align="center">
               <Select
                 value={row.ductShape}
-                onChange={(event) => handleDuctShapeChange(event, index)}
+                onChange={(event) => handleInputChange(event, index, "ductShape")}
                 displayEmpty
               >
                 <MenuItem value="">Select</MenuItem>
@@ -153,44 +144,76 @@ const MyTable = () => {
                 <MenuItem value="round">Round</MenuItem>
               </Select>
             </TableCell>
-            <TableCell>
-              <TextField
-                name="height"
-                value={row.height}
-                onChange={(event) => handleInputChange(event, index)}
-                disabled={row.ductShape === "round"}
-                variant="filled"
-                style={{
-                  backgroundColor:
-                    row.ductShape === "round" ? "lightgrey" : "white",
-                }}
-              />
-            </TableCell>
-            <TableCell>
-              <TextField
+            <TableCell align="center">
+              <Select
                 name="width"
                 value={row.width}
-                onChange={(event) => handleInputChange(event, index)}
+                onChange={(event) => handleInputChange(event, index, "width")}
                 disabled={row.ductShape === "round"}
-                variant="filled"
-                style={{
-                  backgroundColor:
-                    row.ductShape === "round" ? "lightgrey" : "white",
-                }}
-              />
+              >
+              <MenuItem value="">Select</MenuItem>
+              <MenuItem value="200">200</MenuItem>
+              <MenuItem value="250">250</MenuItem>
+              <MenuItem value="300">300</MenuItem>
+              <MenuItem value="400">400</MenuItem>
+              <MenuItem value="500">500</MenuItem>
+              <MenuItem value="600">600</MenuItem>
+              <MenuItem value="800">800</MenuItem>
+              <MenuItem value="1000">1000</MenuItem>
+              <MenuItem value="1200">1200</MenuItem>
+              <MenuItem value="1400">1400</MenuItem>
+              <MenuItem value="1600">1600</MenuItem>
+              <MenuItem value="1800">1800</MenuItem>
+              <MenuItem value="2000">2000</MenuItem>
+              </Select>
+              
+            </TableCell >
+            <TableCell align="center">
+              <Select
+                name="height"
+                value={row.height}
+                onChange={(event) => handleInputChange(event, index, "height")}
+                disabled={row.ductShape === "round"}
+              >
+              <MenuItem value="">Select</MenuItem>
+              <MenuItem value="200">200</MenuItem>
+              <MenuItem value="250">250</MenuItem>
+              <MenuItem value="300">300</MenuItem>
+              <MenuItem value="400">400</MenuItem>
+              <MenuItem value="500">500</MenuItem>
+              <MenuItem value="600">600</MenuItem>
+              <MenuItem value="800">800</MenuItem>
+              <MenuItem value="1000">1000</MenuItem>
+              <MenuItem value="1200">1200</MenuItem>
+              <MenuItem value="1400">1400</MenuItem>
+              <MenuItem value="1600">1600</MenuItem>
+              <MenuItem value="1800">1800</MenuItem>
+              <MenuItem value="2000">2000</MenuItem>
+              </Select>
             </TableCell>
             <TableCell align="center">
-              <TextField
+              <Select
                 name="diameter"
                 value={row.diameter}
-                onChange={(event) => handleInputChange(event, index)}
+                onChange={(event) => handleInputChange(event, index, "diameter")}
                 disabled={row.ductShape === "rectangular"}
-                variant="filled"
-                style={{
-                  backgroundColor:
-                    row.ductShape === "rectangular" ? "lightgrey" : "white",
-                }}
-              />
+              >
+              <MenuItem value="">Select</MenuItem>
+              <MenuItem value="63">63</MenuItem>
+              <MenuItem value="80">80</MenuItem>
+              <MenuItem value="100">100</MenuItem>
+              <MenuItem value="125">125</MenuItem>
+              <MenuItem value="160">160</MenuItem>
+              <MenuItem value="200">200</MenuItem>
+              <MenuItem value="250">250</MenuItem>
+              <MenuItem value="315">315</MenuItem>
+              <MenuItem value="400">400</MenuItem>
+              <MenuItem value="500">500</MenuItem>
+              <MenuItem value="630">630</MenuItem>
+              <MenuItem value="800">800</MenuItem>
+              <MenuItem value="1000">1000</MenuItem>
+              <MenuItem value="1000">1250</MenuItem>
+              </Select>
             </TableCell>
 
             <TableCell align="center">Data 5</TableCell>

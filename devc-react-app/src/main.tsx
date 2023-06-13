@@ -1,6 +1,5 @@
 import React from 'react'
 import ReactDOM from 'react-dom'
-import App from './App.tsx'
 import './index.css'
 import MyTable from './HVAC Calculator/HVACC.tsx'
 import { createTheme, ThemeProvider } from '@material-ui/core/styles';
@@ -9,12 +8,22 @@ const theme = createTheme({
   typography: {
     fontFamily: 'Roboto, sans-serif',
   },
+  overrides: {
+    MuiTableRow: {
+      root: {
+        '&:hover': {
+          backgroundColor: '#FFFACD', // your preferred color for the hover effect
+         
+        },
+      },
+    },
+  },
 });
 
 ReactDOM.render(
   <React.StrictMode>
     <ThemeProvider theme={theme}>
-    <App />
+      <h1>HVAC Duct Pressure Loss Calculation</h1>
     <MyTable />
     </ThemeProvider>
   </React.StrictMode>,
