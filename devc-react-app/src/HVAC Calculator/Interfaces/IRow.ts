@@ -6,6 +6,8 @@ interface IRow  {
     diameter?: string; 
     height?: string; 
     width?: string;
+    length: number;
+    flowRate: number;
   }
 
   export default IRow
