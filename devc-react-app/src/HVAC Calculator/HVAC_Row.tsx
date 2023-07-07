@@ -1,215 +1,24 @@
-// Importing necessary modules and components from react and material-ui library
-import React, { useState } from "react";
-import {
-  Table,
-  TableHead,
-  TableRow,
-  TableCell,
-  TableBody,
-  Select,
-  MenuItem,
-  IconButton,
-  Dialog,
-  DialogTitle,
-  DialogContent,
-  DialogActions,
-  Button,
-  TextField,
-} from "@material-ui/core";
+import React, {useEffect} from 'react';
+import {TableCell, TableRow, MenuItem, Select,TextField, Button, IconButton,} from "@material-ui/core";
 import AddIcon from "@material-ui/icons/Add";
 import DeleteIcon from "@material-ui/icons/Delete";
-import IRow from "./Interfaces/IRow";
-import DuctShape from "./enums/DuctShape";
-import { makeStyles } from "@material-ui/core/styles";
+import IHVAC_Row_Props from "./Interfaces/IHVAC_Row_Props"
 
-const useStyles = makeStyles({
-  button: {
-    textTransform: "none",
-  },
-});
+const TableRowComponent:React.FC<IHVAC_Row_Props> = ({row, index, handleInputChange, hoveredRow, handleOpenModal, handleAddRow, handleDeleteRow, setHoveredRow, classes}) =>{
+    useEffect(() => {
+        if(row.ductShape === 'rectangular'){
+          console.log("Rectangular")  
+        }else if (row.ductShape === 'round'){
+            console.log("Round")
+        }else {
+            console.log("unselected")
+        }
+    }, [row.ductShape]);
 
-// Define the MyTable component
-const MyTable = () => {
-  const classes = useStyles();
-  //Type information for row object
-
-  // Initialize a state variable 'rows' with an array containing a single object
-  // Also initialize the function 'setRows' to update this state
-  const [rows, setRows] = useState<IRow[]>([
-    {
-      id: 1,
-      ductShape: DuctShape.Unselected,
-      diameter: "",
-      height: "",
-      width: "",
-      length: 0,
-      flowRate: 0,
-    },
-  ]);
-  const [openModal, setOpenModal] = useState(false);
-  const [activeRow, setActiveRow] = useState<number | null>(null);
-  // Function to add a new row to the table
-  const handleAddRow = (index: number) => {
-    // Create new row object
-    const newRow: IRow = {
-      id: rows.length + 1,
-      ductShape: DuctShape.Unselected,
-      diameter: "", // Provide default value
-      height: "", // Provide default value
-      width: "", // Provide default value
-      length: 0,
-      flowRate: 0,
-    };
-    // Clone rows array
-    const updatedRows: IRow[] = [...rows];
-    updatedRows.splice(index + 1, 0, newRow);
-    // Update IDs
-    const rowsWithNewIds = updatedRows.map((row, i) => {
-      return { ...row, id: i };
-    });
-    // Update state with the new array
-
-    setRows(rowsWithNewIds);
-    console.log(rowsWithNewIds);
-  };
-  // Function to delete a row from the table
-  const handleDeleteRow = (index: number) => {
-    // Filter out the row at the given index
-    const updatedRows = rows.filter((_, i) => i !== index);
-    // Update IDs
-    const rowsWithNewIds = updatedRows.map((row, i) => {
-      return { ...row, id: i };
-    });
-    // Update state with the new array
-    setRows(rowsWithNewIds);
-    console.log(rowsWithNewIds);
-  };
-
-  //Function to handle changes in the input and track the row object
-  const handleInputChange = (
-    event: React.ChangeEvent<{ value: unknown }>,
-    index: number,
-    property: keyof IRow
-  ) => {
-    //Update the property (name of the input field) of the row at the given index value with the new value
-    const updatedRows = rows.map((row, i) => {
-      if (i === index) {
-        return { ...row, [property]: event.target.value };
-      }
-      return row;
-    });
-    //Update the state with the new array
-
-    setRows(updatedRows);
-    console.log(updatedRows);
-  };
-  const handleOpenModal = (index: number) => {
-    setActiveRow(index);
-    setOpenModal(true);
-  };
-
-  const handleCloseModal = () => {
-    setOpenModal(false);
-  };
-
-  //Render the component
-  return (
-    //Define a table structure
-    <Table style={{ width: "1500px", margin: "0px" }}>
-      {/*Define table headers*/}
-      <TableHead>
-        <TableRow>
-          <TableCell
-            style={{ width: "100px", fontWeight: "bold" }}
-            align="left"
-          >
-            Duct Shape
-          </TableCell>
-          <TableCell
-            style={{ width: "100px", fontWeight: "bold" }}
-            align="center"
-          >
-            Width <br />
-            (mm)
-          </TableCell>
-          <TableCell
-            style={{ width: "100px", fontWeight: "bold" }}
-            align="center"
-          >
-            Height <br />
-            (mm)
-          </TableCell>
-          <TableCell
-            style={{ width: "100px", fontWeight: "bold" }}
-            align="center"
-          >
-            Diameter <br />
-            (mm)
-          </TableCell>
-          <TableCell
-            style={{ width: "120px", fontWeight: "bold" }}
-            align="center"
-          >
-            Length <br />
-            (mm)
-          </TableCell>
-          <TableCell
-            style={{ width: "150px", fontWeight: "bold" }}
-            align="center"
-          >
-            Flow Rate <br />
-            (m<sup>3</sup>/s)
-          </TableCell>
-          <TableCell
-            style={{ width: "150px", fontWeight: "bold" }}
-            align="center"
-          >
-            Pressure Loss <br />
-            (Pa)
-          </TableCell>
-          <TableCell
-            style={{
-              width: "100px",
-              borderLeft: "1px solid gray",
-              backgroundColor: "#f5f5f5",
-              fontWeight: "bold",
-            }}
-            align="center"
-          >
-            Fitting Type
-          </TableCell>
-          <TableCell
-            style={{ width: "100px", backgroundColor: "#f5f5f5" }}
-          ></TableCell>
-          <TableCell
-            style={{
-              width: "150px",
-              borderRight: "1px solid gray",
-              backgroundColor: "#f5f5f5",
-              fontWeight: "bold",
-            }}
-            align="center"
-          >
-            Pressure Loss <br />
-            (Pa)
-          </TableCell>
-          <TableCell style={{ width: "100px" }}></TableCell>
-        </TableRow>
-      </TableHead>
-      {/* Modal for additional settings */}
-      <Dialog open={openModal} onClose={handleCloseModal}>
-        <DialogTitle>Additional Settings</DialogTitle>
-        <DialogContent>{/* Your form fields here */}</DialogContent>
-        <DialogActions>
-          <Button onClick={handleCloseModal}>Cancel</Button>
-          <Button onClick={handleCloseModal}>Save</Button>
-        </DialogActions>
-      </Dialog>
-      {/*Define table body*/}
-      <TableBody>
-        {/*map function to put data into table*/}
-        {rows.map((row, index) => (
-          <TableRow key={row.id}>
+    return (
+        <TableRow key={row.id} 
+          onMouseEnter={() => setHoveredRow(index)} 
+          onMouseLeave={() => setHoveredRow(null)}>
             <TableCell align="center">
               <Select
                 value={row.ductShape}
@@ -332,17 +141,20 @@ const MyTable = () => {
                 onChange={(event) => handleInputChange(event, index, "flowRate")} // Update the inputValue state whenever the input changes.
               />
             </TableCell>
-            <TableCell align="center">Data 7</TableCell>
+           Data 7
+            <TableCell>
+              
+            </TableCell>
             <TableCell
               style={{
                 borderLeft: "1px solid gray",
-                backgroundColor: "#f5f5f5",
+                backgroundColor: hoveredRow === index ? '#FFFACD' : "#f5f5f5",
               }}
               align="center"
             >
               Data 8
             </TableCell>
-            <TableCell style={{ backgroundColor: "#f5f5f5" }} align="center">
+            <TableCell style={{ backgroundColor: hoveredRow === index ? '#FFFACD' : "#f5f5f5" }} align="center">
               <Button
                 variant="contained"
                 color="primary"
@@ -355,7 +167,7 @@ const MyTable = () => {
             <TableCell
               style={{
                 borderRight: "1px solid gray",
-                backgroundColor: "#f5f5f5",
+                backgroundColor: hoveredRow === index ? '#FFFACD' : "#f5f5f5",
               }}
               align="center"
             >
@@ -378,10 +190,8 @@ const MyTable = () => {
               )}
             </TableCell>
           </TableRow>
-        ))}
-      </TableBody>
-    </Table>
-  );
-};
 
-export default MyTable;
+    )
+}
+
+export default TableRowComponent

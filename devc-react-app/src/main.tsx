@@ -1,7 +1,7 @@
 import React from 'react'
 import ReactDOM from 'react-dom'
 import './index.css'
-import MyTable from './HVAC Calculator/HVACC.tsx'
+import MyTable from './HVAC Calculator/HVAC_Table.tsx'
 import { createTheme, ThemeProvider } from '@material-ui/core/styles';
 
 const theme = createTheme({
@@ -17,6 +17,8 @@ const theme = createTheme({
         },
       },
     },
+    
+    
   },
 });
 
