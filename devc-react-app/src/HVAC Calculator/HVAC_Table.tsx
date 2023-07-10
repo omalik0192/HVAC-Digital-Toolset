@@ -210,6 +210,7 @@ const MyTable = () => {
             (Pa)
           </TableCell>
           <TableCell style={{ width: "100px", backgroundColor: "#7939f7", }}></TableCell>
+          
         </TableRow>
       </TableHead>
       {/* Modal for additional settings */}
@@ -228,6 +229,7 @@ const MyTable = () => {
 
           return (
           <HVAC_Row
+          key={index}
           row = {row}
           index={index}
           handleInputChange={handleInputChange}
